@@ -4,12 +4,11 @@ import cv2
 import numpy as np
 from PIL import Image, ImageTk
 import pywt
-from pathlib import Path
 
 class ModernImageProcessor:
     def __init__(self, root):
         self.root = root
-        self.root.title("Advanced Image Processing Suite")
+        self.root.title("DIP Project for Sir Adnan")
         self.root.state('zoomed')
         
         self.colors = {
@@ -24,7 +23,6 @@ class ModernImageProcessor:
             'background': 'black'    
         }
         
-        # Initialize variables
         self.images = {'primary': None, 'secondary': None}
         self.image_paths = {'primary': None, 'secondary': None}
         self.processed_image = None
@@ -67,14 +65,11 @@ class ModernImageProcessor:
         self.create_gui()
         
     def setup_styles(self):
-        """Configure custom styles for widgets"""
         style = ttk.Style()
         
-        # Configure main styles
         style.configure('Primary.TFrame', background=self.colors['primary'])
         style.configure('Secondary.TFrame', background=self.colors['secondary'])
         
-        # Button styles
         style.configure('Primary.TButton',
                        font=('Times New Roman', 25, 'bold'),
                        padding=0,
@@ -85,7 +80,6 @@ class ModernImageProcessor:
                        padding=0, foreground=self.colors['accent'],
                        background=self.colors['success'])
         
-        # Label styles
         style.configure('Header.TLabel',
                        font=('Times New Roman', 26, 'bold'),
                        foreground=self.colors['text_light'])
@@ -97,7 +91,6 @@ class ModernImageProcessor:
         
     def create_gui(self):
         """Create the main GUI layout"""
-        # Configure root grid
         self.root.configure(bg=self.colors['background'])
         self.root.grid_columnconfigure(1, weight=1)
         self.root.grid_rowconfigure(0, weight=1)
@@ -352,7 +345,7 @@ class ModernImageProcessor:
                     secondary_img[secondary_img == 0] = 1
                     self.processed_image = cv2.divide(img, secondary_img)
                 elif operation == "Blending":
-                    alpha = 0.5  # You could make this adjustable
+                    alpha = 0.4 # You could make this adjustable
                     self.processed_image = cv2.addWeighted(img, alpha, 
                                                          secondary_img, 1-alpha, 0)
             
@@ -365,11 +358,11 @@ class ModernImageProcessor:
                     
                 elif operation == "Rotation":
                     center = (width//2, height//2)
-                    M = cv2.getRotationMatrix2D(center, 45, 1.0)  # 45 degree rotation
+                    M = cv2.getRotationMatrix2D(center, 99, 1.0)  # 45 degree rotation
                     self.processed_image = cv2.warpAffine(img, M, (width, height))
                     
                 elif operation == "Scaling":
-                    self.processed_image = cv2.resize(img, None, fx=1.5, fy=1.5)
+                    self.processed_image = cv2.resize(img, None, fx=0.25, fy=0.45)
                     
                 elif operation in ["AND", "OR", "XOR"]:
                     secondary_img = self.images['secondary']
@@ -434,6 +427,7 @@ class ModernImageProcessor:
                     sobely = cv2.Sobel(gray, cv2.CV_64F, 0, 1, ksize=3)
                     magnitude = cv2.magnitude(sobelx, sobely)
                     self.processed_image = cv2.normalize(magnitude, None, 0, 255, cv2.NORM_MINMAX).astype(np.uint8)
+                    
                 elif operation == "Canny":
                     self.processed_image = cv2.Canny(gray, 100, 200)
                     
